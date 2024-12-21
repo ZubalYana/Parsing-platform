@@ -12,6 +12,12 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+const url = 'https://bt.rozetka.com.ua/ua/philips-ep4449-70/p424303650/'
+
+app.post('/goodsTargetName', async (req, res) => {
+    console.log(req.body);
+})
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
