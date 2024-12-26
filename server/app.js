@@ -3,73 +3,73 @@ const app = express();
 const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const PORT = process.env.PORT || 3000;
 const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
-const { default: axios } = require('axios');
+const axios = require('axios');
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://zubalana0:zbhQXHED368PbcVK@cluster0.a5jnl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
-.then(
-    console.log('MongoDB connected')
-)
 
-let itemSchema = new mongoose.Schema({
+const PORT = process.env.PORT || 3000;
+
+mongoose
+    .connect(
+        'mongodb+srv://zubalana0:zbhQXHED368PbcVK@cluster0.a5jnl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+    )
+    .then(() => console.log('MongoDB connected'))
+    .catch((err) => console.error('MongoDB connection error:', err));
+
+const itemSchema = new mongoose.Schema({
     title: String,
     price: String,
-    status: Boolean
-  });
-  
-let Item = mongoose.model('Item', itemSchema);
+    status: Boolean,
+});
+
+const Item = mongoose.model('Item', itemSchema);
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-let url = '';
-
 app.post('/goodsTargetName', async (req, res) => {
-    console.log(req.body);
-    url = req.body.URL;
-})
+    const { URL } = req.body;
+    if (!URL) {
+        return res.status(400).json({ message: 'URL is required' });
+    }
 
-app.get('/itemInfo', async (req, res) => {
     try {
-        const response = await axios.get(url);
+        const response = await axios.get(URL);
         const html = response.data;
         const $ = cheerio.load(html);
-        const data = [];
+
         const titles = [];
+        const prices = [];
         const statuses = [];
-        $('.title__font').each((index, element) => {
-            const title = $(element).text(); 
-            titles.push(title);
+
+        $('.title__font').each((_, element) => {
+            titles.push($(element).text());
         });
 
-        $('.status-label').each((index, element) => {
-            const statusText = $(element).text(); 
-            if(statusText.includes('Є в наявності')){
-                statuses.push(true);
-            }else{
-                statuses.push(false);
-            }
-            console.log(statuses)
+        $('.product-price__big').each((_, element) => {
+            prices.push($(element).text());
         });
 
-        $('.product-price__big').each((index, element) => {
-            const price = $(element).text(); 
-            data.push({ title: titles[index], price, status: statuses[index] });
-            
+        $('.status-label').each((_, element) => {
+            statuses.push($(element).text().includes('Є в наявності') || $(element).text().includes('Закінчується'));
         });
 
-        res.json(data);
+        const items = titles.map((title, index) => ({
+            title,
+            price: prices[index],
+            status: statuses[index],
+        }));
+
+        await Item.insertMany(items);
+        res.json({ message: 'Data successfully logged', items });
     } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error parsing URL:', error);
+        res.status(500).json({ message: 'Error fetching data from URL' });
     }
 });
-
-
-
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
