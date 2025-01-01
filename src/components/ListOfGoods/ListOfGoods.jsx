@@ -37,14 +37,16 @@ export default function ListOfGoods() {
     <div className='goodsContainer'>
         {goods.map((item, index) => (
             <div className='goodsItem' key={index}>
-                <p>{item.title}</p>
-                <p>{item.price}</p>
+                <p className='itemTitle'>{item.title}</p>
+                <p className='itemPrice'>{item.price}</p>
                 <p>{item.status ? 'Available' : 'Not available'}</p>
                 <a href={item.url} className='viewBtn' >View</a>
+                <div className="itemButtons">
                 <button onClick={() => setFollow(item._id)}>
                     {item.follow ? 'Unfollow' : 'Follow'}
                 </button>
                 <button onClick={() => getUpdate(item._id)}>Check update</button>
+                </div>
             </div>
         ))}
     </div>

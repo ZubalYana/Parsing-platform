@@ -5,8 +5,10 @@ function App() {
 
   return (
     <>
+    <div className="wrap">
     <AdminInput />
     <ListOfGoods />
+    </div>
     </>
   )
 }

@@ -1,0 +1,26 @@
+.adminForm input{
+    width: 300px;
+    height: 40px;
+    outline: none;
+    border-radius: 16px;
+    border: 2px #22177A solid;
+    padding-left: 10px;
+}
+.adminForm button{
+    width: 120px;
+    height: 40px;
+    outline: none;
+    border-radius: 16px;
+    border: 2px #22177A solid;
+    color: #22177A;
+    margin-left: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease-in-out;
+    background-color: #fff;
+    cursor: pointer;
+}
+.adminForm button:hover{
+    background-color: #22177A;
+    color: #fff;
+}

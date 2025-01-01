@@ -1,21 +1,85 @@
-.goodsItem{
-    width: 300px;
-    min-height: 200px;
-    background-color: #cfcfcf;
-    border-radius: 20px;
-    padding: 20px;
-    margin-top: 20px;
+.goodsContainer {
     display: flex;
-    flex-direction: column;
-}
-.goodsContainer{
-    width: 100%;
     flex-wrap: wrap;
-    display: flex;
+    gap: 20px;
     justify-content: space-between;
-}
-.viewBtn{
-    margin: 20px 0;
+    padding: 30px 0;
+    width: 100%;
+  }
+  
+  .goodsItem {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    width: 250px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 20px;
+  }
+  
+  .goodsItem:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  }
+  
+  .itemTitle {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #22177A;
+    margin-bottom: 10px;
+  }
+  
+  .itemPrice {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #605EA1;
+    margin-bottom: 15px;
+  }
+  
+  .goodsItem p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 10px;
+  }
+  
+  .viewBtn {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #22177A;
+    color: #fff;
     text-decoration: none;
-    color: #000;
-}
+    border-radius: 5px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+  }
+  
+  .viewBtn:hover {
+    background-color: #180f5d;
+  }
+  
+  button {
+    padding: 8px 16px;
+    background-color: #605EA1;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #4c4b8f;
+  }
+  
+  button:disabled {
+    background-color: #bbb;
+    cursor: not-allowed;
+  }
+  
+  .itemButtons{
+    margin-top: 5px;
+  }
