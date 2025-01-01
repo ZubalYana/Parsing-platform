@@ -1,0 +1,21 @@
+.goodsItem{
+    width: 300px;
+    min-height: 200px;
+    background-color: #cfcfcf;
+    border-radius: 20px;
+    padding: 20px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+.goodsContainer{
+    width: 100%;
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: space-between;
+}
+.viewBtn{
+    margin: 20px 0;
+    text-decoration: none;
+    color: #000;
+}
