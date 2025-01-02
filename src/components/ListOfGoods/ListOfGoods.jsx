@@ -9,7 +9,7 @@ export default function ListOfGoods({ refreshGoods }) {
 
     const getGoods = () => {
         axios.get('http://localhost:3000/items')
-            .then(res => setGoods(res.data))
+            .then(res => setGoods(res.data.reverse()))
             .catch(error => console.error('Error fetching goods:', error));
     };
 
