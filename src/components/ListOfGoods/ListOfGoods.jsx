@@ -43,6 +43,9 @@ export default function ListOfGoods() {
     <div className='goodsContainer'>
         {goods.map((item, index) => (
             <div className='goodsItem' key={index}>
+                <div className="itemImgContainer">
+                  <img src={item.image} alt={item.title} className='itemImage' />
+                </div>
                 <p className='itemTitle'>{item.title}</p>
                 <p className='itemPrice'>{item.price}</p>
                 <p>{item.status ? 'Available' : 'Not available'}</p>

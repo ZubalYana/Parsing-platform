@@ -18,14 +18,16 @@ mongoose
     .then(() => console.log('MongoDB connected'))
     .catch((err) => console.error('MongoDB connection error:', err));
 
-const itemSchema = new mongoose.Schema({
-    title: String,
-    price: String,
-    status: Boolean,
-    createdAt: { type: Date, default: Date.now },
-    follow: Boolean,
-    url: String
-});
+    const itemSchema = new mongoose.Schema({
+        title: String,
+        price: String,
+        status: Boolean,
+        image: String, 
+        createdAt: { type: Date, default: Date.now },
+        follow: Boolean,
+        url: String
+    });
+    
 
 const Item = mongoose.model('Item', itemSchema);
 
@@ -48,6 +50,7 @@ app.post('/goodsTargetName', async (req, res) => {
         const titles = [];
         const prices = [];
         const statuses = [];
+        const images = [];
 
         $('.title__font').each((_, element) => {
             titles.push($(element).text());
@@ -61,6 +64,9 @@ app.post('/goodsTargetName', async (req, res) => {
             statuses.push($(element).text().includes('Є в наявності') || $(element).text().includes('Закінчується'));
         });
 
+        const imgElement = $('.main-slider__item img').first();
+        const imgUrl = imgElement.attr('src');
+        images.push(imgUrl);
 
         let goodsInfo = {};
         goodsInfo.title = titles[0];
@@ -68,8 +74,9 @@ app.post('/goodsTargetName', async (req, res) => {
         goodsInfo.status = statuses[0];
         goodsInfo.follow = false;
         goodsInfo.url = URL;
+        goodsInfo.image = images[0]; 
 
-        console.log(goodsInfo)
+        console.log(goodsInfo);
 
         await Item.create(goodsInfo);
 
@@ -79,6 +86,7 @@ app.post('/goodsTargetName', async (req, res) => {
         res.status(500).json({ message: 'Error fetching data from URL' });
     }
 });
+
 
 app.get('/items', async (req, res) => {
     try {
@@ -116,25 +124,27 @@ app.post('/getUpdate', async (req, res) => {
         const title = $('.title__font').text().trim();
         const price = $('.product-price__big').text().trim();
         const status = $('.status-label').text().includes('Є в наявності') || $('.status-label').text().includes('Закінчується');
+        const imgUrl = $('.main-slider__item img').first().attr('src');
 
         const item = await Item.findOne({ url: url });
 
-        if (item.title === title && item.price === price && item.status === status) {
+        if (item.title === title && item.price === price && item.status === status && item.image === imgUrl) {
             await browser.close();
             bot.sendMessage(process.env.CHAT_ID, `The data has not changed for item: ${title}`);
             return res.json({ message: 'The data has not changed' });
         } else {
-            await Item.updateOne({ url: url }, { title, price, status });
+            await Item.updateOne({ url: url }, { title, price, status, image: imgUrl });
 
             await browser.close();
             bot.sendMessage(process.env.CHAT_ID, `The data has changed for item: ${title}`);
-            return res.json({ message: 'The data has changed', updatedItem: { title, price, status } });
+            return res.json({ message: 'The data has changed', updatedItem: { title, price, status, image: imgUrl } });
         }
     } catch (error) {
         console.error('Error fetching item:', error);
         res.status(500).json({ message: 'Error fetching item' });
     }
 });
+
 
 
 app.listen(PORT, () => {
