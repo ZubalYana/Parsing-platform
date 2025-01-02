@@ -93,3 +93,7 @@
   display: flex;
   justify-content: center;
 }
+.deleteBtn{
+  margin-top: 10px;
+  background-color: #22177A;
+}

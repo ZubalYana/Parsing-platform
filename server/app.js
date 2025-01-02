@@ -87,7 +87,6 @@ app.post('/goodsTargetName', async (req, res) => {
     }
 });
 
-
 app.get('/items', async (req, res) => {
     try {
         const items = await Item.find();
@@ -142,6 +141,17 @@ app.post('/getUpdate', async (req, res) => {
     } catch (error) {
         console.error('Error fetching item:', error);
         res.status(500).json({ message: 'Error fetching item' });
+    }
+});
+
+app.delete('/deleteItem/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        await Item.findByIdAndDelete(id);
+        res.json({ message: 'Item deleted' });
+    } catch (error) {
+        console.error('Error deleting item:', error);
+        res.status(500).json({ message: 'Error deleting item' });
     }
 });
 

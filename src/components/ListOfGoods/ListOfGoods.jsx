@@ -33,10 +33,19 @@ export default function ListOfGoods() {
             console.error('Error:', error);
         }
     };
-    
     useEffect(() => {
         getGoods();
     }, []); 
+
+    const deleteItem = async (id) => {
+        try {
+            const response = await axios.delete(`http://localhost:3000/deleteItem/${id}`);
+            console.log(response.data);
+            getGoods();
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
     
 
   return (
@@ -55,6 +64,7 @@ export default function ListOfGoods() {
                     {item.follow ? 'Unfollow' : 'Follow'}
                 </button>
                 <button onClick={() => getUpdate(item.url)}>Check update</button>
+                <button onClick={() => deleteItem(item._id)} className='deleteBtn'>Delete item</button>
                 </div>
             </div>
         ))}
