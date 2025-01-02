@@ -96,7 +96,6 @@ app.post('/follow', async (req, res) => {
         const item = await Item.findById(id);
         item.follow = !item.follow;
         await item.save();
-        // bot.sendMessage(process.env.CHAT_ID, 'Follow status for ' + item.title + ' has been changed to ' + item.follow);
         bot.sendMessage(process.env.CHAT_ID, `You ${item.follow ? 'followed' : 'unfollowed'} ${item.title}`);
         res.json(item);
     } catch (error) {
@@ -107,31 +106,36 @@ app.post('/follow', async (req, res) => {
 
 app.post('/getUpdate', async (req, res) => {
     try {
-        const {url} = req.body;
+        const { url } = req.body;
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
         await page.goto(url);
         const html = await page.content();
         const $ = cheerio.load(html);
 
-        const title = $('.title__font').text();
-        const price = $('.product-price__big').text();
+        const title = $('.title__font').text().trim();
+        const price = $('.product-price__big').text().trim();
         const status = $('.status-label').text().includes('Є в наявності') || $('.status-label').text().includes('Закінчується');
 
         const item = await Item.findOne({ url: url });
-        if(item.title === title && item.price === price && item.status === status) {
+
+        if (item.title === title && item.price === price && item.status === status) {
             await browser.close();
-            bot.sendMessage(process.env.CHAT_ID, 'The data has not changed');
+            bot.sendMessage(process.env.CHAT_ID, `The data has not changed for item: ${title}`);
             return res.json({ message: 'The data has not changed' });
-        }else{
-            bot.sendMessage(process.env.CHAT_ID, 'The data has changed');
-            return res.json({ message: 'The data has changed' });
+        } else {
+            await Item.updateOne({ url: url }, { title, price, status });
+
+            await browser.close();
+            bot.sendMessage(process.env.CHAT_ID, `The data has changed for item: ${title}`);
+            return res.json({ message: 'The data has changed', updatedItem: { title, price, status } });
         }
     } catch (error) {
         console.error('Error fetching item:', error);
         res.status(500).json({ message: 'Error fetching item' });
     }
-})
+});
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

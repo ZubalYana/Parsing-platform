@@ -12,7 +12,7 @@ export default function ListOfGoods() {
     }
     useEffect(() => {
         getGoods();
-    })
+    }, [])
 
     const setFollow = async (id) => {
         try{
@@ -25,13 +25,19 @@ export default function ListOfGoods() {
     }
 
     const getUpdate = async (url) => {
-        try{
-            const response = await axios.post(`http://localhost:3000/getUpdate`, {id});
-            console.log(response.data)
-        }catch{
-            console.error('Error');
+        try {
+            const response = await axios.post('http://localhost:3000/getUpdate', { url });
+            console.log(response.data);
+            getGoods();
+        } catch (error) {
+            console.error('Error:', error);
         }
-    }
+    };
+    
+    useEffect(() => {
+        getGoods();
+    }, []); 
+    
 
   return (
     <div className='goodsContainer'>
@@ -45,7 +51,7 @@ export default function ListOfGoods() {
                 <button onClick={() => setFollow(item._id)}>
                     {item.follow ? 'Unfollow' : 'Follow'}
                 </button>
-                <button onClick={() => getUpdate(item._id)}>Check update</button>
+                <button onClick={() => getUpdate(item.url)}>Check update</button>
                 </div>
             </div>
         ))}
