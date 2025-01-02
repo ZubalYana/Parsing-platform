@@ -96,7 +96,8 @@ app.post('/follow', async (req, res) => {
         const item = await Item.findById(id);
         item.follow = !item.follow;
         await item.save();
-        bot.sendMessage(process.env.CHAT_ID, 'Follow status for ' + item.title + ' has been changed to ' + item.follow);
+        // bot.sendMessage(process.env.CHAT_ID, 'Follow status for ' + item.title + ' has been changed to ' + item.follow);
+        bot.sendMessage(process.env.CHAT_ID, `You ${item.follow ? 'followed' : 'unfollowed'} ${item.title}`);
         res.json(item);
     } catch (error) {
         console.error('Error following item:', error);

@@ -40,7 +40,7 @@ export default function ListOfGoods() {
                 <p className='itemTitle'>{item.title}</p>
                 <p className='itemPrice'>{item.price}</p>
                 <p>{item.status ? 'Available' : 'Not available'}</p>
-                <a href={item.url} className='viewBtn' >View</a>
+                <a target='_blank' href={item.url} className='viewBtn' >View</a>
                 <div className="itemButtons">
                 <button onClick={() => setFollow(item._id)}>
                     {item.follow ? 'Unfollow' : 'Follow'}
